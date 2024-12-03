@@ -1,15 +1,14 @@
 import { render } from '@testing-library/react';
+import User from './user.home';
 
-import App from './app';
-
-describe('App', () => {
+describe('User', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<App />);
+    const { baseElement } = render(<User />);
     expect(baseElement).toBeTruthy();
   });
 
   it('should have a greeting as the title', () => {
-    const { getByText } = render(<App />);
+    const { getByText } = render(<User />);
     expect(getByText(/Welcome web/gi)).toBeTruthy();
   });
 });
