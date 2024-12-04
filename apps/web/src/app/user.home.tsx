@@ -17,6 +17,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import BasicModal from './user.update.modal';
 
 export default function User() {
   const [userList, setuserList] = useState<ReceiveUserList[]>([]);
@@ -73,7 +74,7 @@ export default function User() {
     }
   }
 
-  async function statusButton(
+  async function updateButton(
     id: string,
     userName: string,
     userEmail: string,
@@ -115,7 +116,6 @@ export default function User() {
         {errors.age && <span>This field is required</span>}
         <input type="submit" />
       </form>
-
       <h1>User Management</h1>
       <div>
         <TableContainer component={Paper}>
@@ -150,11 +150,12 @@ export default function User() {
                       size="small"
                       startIcon={<KeyboardReturnIcon />}
                       onClick={() =>
-                        statusButton(row.id, 'test', 'test', 'test')
+                        updateButton(row.id, 'test', 'test', 'test')
                       }
                     >
-                      hello
+                      Update
                     </Button>
+                    <BasicModal></BasicModal>
                   </TableCell>
 
                   <TableCell align="center">
