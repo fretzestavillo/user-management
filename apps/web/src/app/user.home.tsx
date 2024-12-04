@@ -66,7 +66,6 @@ export default function User() {
         throw new Error('Request failed with status ' + response.status);
       }
       await getList();
-      console.log('Deleted successfully');
     } catch (error) {
       console.error('Error deleting item:', error);
     }
