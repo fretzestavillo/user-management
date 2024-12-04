@@ -1,5 +1,6 @@
 import {
   Body,
+  ConsoleLogger,
   Controller,
   Delete,
   Get,
@@ -33,6 +34,7 @@ export class UserController {
 
   @Patch()
   updateUserInformation(@Query('id') id: string, @Body() userInput: UserInput) {
+    console.log('Im here');
     return this.userService.updateUserInformation(id, userInput);
   }
 }

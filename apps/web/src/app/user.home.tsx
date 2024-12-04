@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -25,7 +24,7 @@ export default function User() {
   useEffect(() => {
     getList();
   }, []);
-  const getList = async () => {
+  const getList = async (): Promise<void> => {
     const BaseUrl = 'http://localhost:3000/api/';
     const response = await fetch(`${BaseUrl}user`);
     const result = await response.json();
@@ -53,7 +52,6 @@ export default function User() {
   };
 
   async function deleteButton(id: string) {
-    console.log(id);
     alert('are you sure you want to delete this item?');
     const baseUrl = 'http://localhost:3000/api/';
     try {
@@ -72,30 +70,6 @@ export default function User() {
     } catch (error) {
       console.error('Error deleting item:', error);
     }
-  }
-
-  async function updateButton(
-    id: string,
-    userName: string,
-    userEmail: string,
-    age: string
-  ) {
-    const data: UpdateUserList = {
-      userName: userName,
-      userEmail: userEmail,
-      age: age,
-    };
-
-    const baseUrl = 'http://localhost:3000/api/';
-    const response = await fetch(`${baseUrl}user?id=${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    await getList();
   }
 
   return (
@@ -144,18 +118,7 @@ export default function User() {
                   <TableCell align="center">{row.age}</TableCell>
 
                   <TableCell align="center">
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      size="small"
-                      startIcon={<KeyboardReturnIcon />}
-                      onClick={() =>
-                        updateButton(row.id, 'test', 'test', 'test')
-                      }
-                    >
-                      Update
-                    </Button>
-                    <BasicModal></BasicModal>
+                    <BasicModal id={row.id} fetchUsers={getList}></BasicModal>
                   </TableCell>
 
                   <TableCell align="center">

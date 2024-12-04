@@ -1,8 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { Inputs, UpdateUserList } from '../tools/type';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 const style = {
   position: 'absolute',
@@ -16,14 +18,46 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal() {
+type BasicModalProps = {
+  id: string;
+  fetchUsers: () => Promise<void>;
+};
+
+export default function BasicModal({ id, fetchUsers }: BasicModalProps) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const BaseUrl = 'http://localhost:3000/api/';
+    const response = await fetch(`${BaseUrl}user?id=${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    handleClose();
+    fetchUsers();
+  };
+
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<KeyboardReturnIcon />}
+        onClick={handleOpen}
+      >
+        Update
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -31,12 +65,22 @@ export default function BasicModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <h1>Add User</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+              placeholder="User Name"
+              {...register('userName', { required: true })}
+            />
+            {errors.userName && <span>This field is required</span>}
+            <input
+              placeholder="User Email"
+              {...register('userEmail', { required: true })}
+            />
+            {errors.userEmail && <span>This field is required</span>}
+            <input placeholder="Age" {...register('age', { required: true })} />
+            {errors.age && <span>This field is required</span>}
+            <input type="submit" />
+          </form>
         </Box>
       </Modal>
     </div>
